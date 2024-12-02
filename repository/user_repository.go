@@ -52,3 +52,12 @@ func FindUserByEmail(users []models.User, email string) bool {
 	}
 	return false
 }
+
+func FindUserByName(users []models.User, name string) bool {
+	for _, user := range users {
+		if user.Name == name {
+			return true
+		}
+	}
+	return false
+}
