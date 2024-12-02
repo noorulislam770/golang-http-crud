@@ -28,11 +28,27 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
+	userID := r.URL.Query().Get("id")
+
 	users, err := repository.GetAllUsers()
 	if err != nil {
 		http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
 		return
+
 	}
+
+	if userID != "" {
+		for _, user := range users {
+			if user.ID == userID {
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(user)
+				return
+			}
+		}
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
