@@ -130,6 +130,14 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 			}
 		case "email":
 			if v, ok := value.(string); ok {
+				// Check if the email is already in use by another user
+				for _, user := range users {
+					if user.Email == v && user.ID != userID {
+						http.Error(w, "User with this email already exists", http.StatusConflict)
+						return
+					}
+				}
+				// Update email if no conflict
 				existingUser.Email = v
 			}
 		case "hobbies":
@@ -202,6 +210,14 @@ func patchUser(w http.ResponseWriter, r *http.Request) {
 			}
 		case "email":
 			if v, ok := value.(string); ok {
+				// Check if the email is already in use by another user
+				for _, user := range users {
+					if user.Email == v && user.ID != userID {
+						http.Error(w, "User with this email already exists", http.StatusConflict)
+						return
+					}
+				}
+				// Update email if no conflict
 				existingUser.Email = v
 			}
 		case "hobbies":
